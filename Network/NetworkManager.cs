@@ -31,9 +31,12 @@ public class NetworkFront
     }
 
     /// <summary>停止処理</summary>
-    static public void Stop()
+    static public async Task Stop()
     {
-        _instance._wsManager?.Stop();
+        if (_instance._wsManager != null)
+        {
+            await _instance._wsManager.Stop();
+        }
     }
 
     #region 内部処理用

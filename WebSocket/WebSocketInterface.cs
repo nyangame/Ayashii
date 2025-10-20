@@ -12,7 +12,8 @@ enum WebSocketCommand
 [Serializable]
 public class WebSocketPacket
 {
-    public string UserId { get; set; }
+    public int UserId { get; set; }
+    public int Target { get; set; }
     public int Command { get; set; }
     public string Data { get; set; }
 };

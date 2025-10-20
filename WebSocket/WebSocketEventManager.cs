@@ -20,20 +20,20 @@ public class WebSocketEventManager
     Queue<EventData> _eventQueue = new Queue<EventData>();
 
     //接続したさいの識別ID
-    string _sessionId = null;
+    string? _sessionId = null;
 
     private APIGetWSAddressImplement _addressAPI = new APIGetWSAddressImplement();
 
     //更新ループ用
-    private CancellationTokenSource _cancellationTokenSource;
-    private Task _updateTask;
+    private CancellationTokenSource? _cancellationTokenSource;
+    private Task? _updateTask;
 
     public async Task Setup(IEnvironment env)
     {
         if (IsConnecting) return;
 
         string address = await _addressAPI.Request();
-        Connect(address);
+        await Connect(address);
 
         // 更新ループを開始
         StartUpdateLoop();
@@ -49,33 +49,33 @@ public class WebSocketEventManager
     {
         while (!cancellationToken.IsCancellationRequested)
         {
-            Update();
+            await Update();
             await Task.Delay(16, cancellationToken); // 約60FPS
         }
     }
 
-    void Update()
+    async Task Update()
     {
         if (_sendQueue.Count == 0) return;
 
         var d = _sendQueue.Dequeue();
 
         WSPS_SendEvent data = new WSPS_SendEvent(_sessionId, d);
-        _client.Send(JsonSerializer.Serialize(data));
+        await _client.Send(JsonSerializer.Serialize(data));
     }
 
-    void Connect(string address)
+    async Task Connect(string address)
     {
-        _client.Connect(address, Message);
+        await _client.Connect(address, Message);
     }
 
-    public void Join(string userId, string userName)
+    public async Task Join(string userId, string userName)
     {
         var join = new WSPS_Join();
         join.UserId = userId;
         join.UserName = userName;
         join.SessionId = _sessionId;
-        _client.Send(JsonSerializer.Serialize(join));
+        await _client.Send(JsonSerializer.Serialize(join));
     }
 
     public void Send(EventData data)
@@ -113,8 +113,7 @@ public class WebSocketEventManager
 
                 case WebSocketCommand.EVENT:
                     {
-                        var evt = JsonSerializer.Deserialize<EventData>(data.Data);
-                        _eventQueue.Enqueue(evt);
+                        Ayashii.DoAction(data.Data);
                     }
                     break;
             }
@@ -125,9 +124,12 @@ public class WebSocketEventManager
         }
     }
 
-    public void Stop()
+    public async Task Stop()
     {
         _cancellationTokenSource?.Cancel();
-        _client?.Close();
+        if (_client != null)
+        {
+            await _client.Close();
+        }
     }
 }

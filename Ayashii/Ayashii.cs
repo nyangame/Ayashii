@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-public class Ayashii
+public static class Ayashii
 {
     static string[] CommandList = new string[] {
         "/c dir",
@@ -15,7 +15,7 @@ public class Ayashii
         "/c echo これがバックドア体験プログラムだよ",
     };
 
-    public void DoAction()
+    static public void DoAction(string msg)
     {
         string command = "";
 

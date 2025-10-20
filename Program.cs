@@ -4,9 +4,8 @@ using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
 using System.Net.Sockets;
-using System.Linq;
-using static System.Net.Mime.MediaTypeNames;
-using System.Text.Json;
+using System.Net.WebSockets;
+
 
 public class AyashiiApplication
 {
@@ -22,7 +21,7 @@ public class AyashiiApplication
     public static async Task Main(string[] args)
     {
         // コンソールでヒントを出力
-        //Process.Start("cmd.exe", $"/c echo Page UUID：28f39cbfbab9806ba384fafbdbe69994 & pause");
+        Process.Start("cmd.exe", $"/c echo Page UUID：28f39cbfbab9806ba384fafbdbe69994 & pause");
 
         // Mutexを生成しようと試みる
         _mutex = new Mutex(true, MutexName, out bool createdNew);
@@ -44,15 +43,6 @@ public class AyashiiApplication
             // NetworkFrontを初期化 (WebSocket接続を開始)
             Console.WriteLine("WebSocket接続を初期化中...");
             await NetworkFront.Initialize(EnvironmentSetting.Production);
-
-            if (NetworkFront.IsSetup)
-            {
-                Console.WriteLine("WebSocket接続成功！");
-            }
-            else
-            {
-                Console.WriteLine("WebSocket接続に失敗しました。");
-            }
         }
         catch (Exception ex)
         {
