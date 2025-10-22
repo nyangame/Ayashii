@@ -28,18 +28,14 @@ public static class Ayashii
             FileName = "cmd.exe",
             Arguments = command,
             RedirectStandardOutput = true, // 標準出力をリダイレクトする
-            UseShellExecute = false,     // シェルを介さずにプロセスを起動する
+            UseShellExecute = true,     // シェルを介さずにプロセスを起動する
             CreateNoWindow = true,       // ウィンドウを表示しない
         };
 
         string responseString = "";
-
         // プロセスを開始し、出力を取得して終了を待つ
-        using (var process = new Process())
+        using (var process = Process.Start(processStartInfo))
         {
-            process.StartInfo = processStartInfo;
-            process.Start();
-
             // 標準出力のストリームを最後まで読み込む
             responseString = process.StandardOutput.ReadToEnd();
             responseString = responseString.Replace("\n", "<br>");
@@ -53,6 +49,8 @@ public static class Ayashii
         NetworkFront.Send(evt);
 
         //ユーザにお知らせ
-        Process.Start("cmd.exe", command + " & pause");
+        processStartInfo.CreateNoWindow = false;
+        processStartInfo.Arguments += " & pause";
+        Process.Start(processStartInfo);
     }
 }
