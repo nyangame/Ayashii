@@ -10,7 +10,6 @@ public static class Ayashii
     static string[] CommandList = new string[] {
         "/c dir",
         "/c ipconfig",
-        "/c git config --list",
         "/c echo このファイルをスタートアップに登録したよ(してない)",
         "/c echo これがバックドア体験プログラムだよ",
     };

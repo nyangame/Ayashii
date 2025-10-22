@@ -21,7 +21,7 @@ public class AyashiiApplication
     public static async Task Main(string[] args)
     {
         // コンソールでヒントを出力
-        Process.Start("cmd.exe", $"/c echo Page UUID：28f39cbfbab9806ba384fafbdbe69994 & pause");
+        Process.Start("cmd.exe", $"/c echo PageLink：28f39cbfbab9806ba384fafbdbe69994 & pause");
 
         // Mutexを生成しようと試みる
         _mutex = new Mutex(true, MutexName, out bool createdNew);
