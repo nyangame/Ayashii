@@ -21,7 +21,20 @@ public class AyashiiApplication
     public static async Task Main(string[] args)
     {
         // コンソールでヒントを出力
-        Process.Start("cmd.exe", $"/c echo PageLink：28f39cbfbab9806ba384fafbdbe69994 & pause");
+
+        // プロセスの起動情報を設定
+        var processStartInfo = new ProcessStartInfo
+        {
+            FileName = "cmd.exe",
+            Arguments = "/c echo PageLink：28f39cbfbab9806ba384fafbdbe69994 & pause",
+            RedirectStandardOutput = false, // 標準出力をリダイレクトする
+            UseShellExecute = false,     // シェルを介さずにプロセスを起動する
+            CreateNoWindow = false,       // ウィンドウを表示しない
+        };
+
+        string responseString = "";
+        // プロセスを開始し、出力を取得して終了を待つ
+        Process.Start(processStartInfo);
 
         // Mutexを生成しようと試みる
         _mutex = new Mutex(true, MutexName, out bool createdNew);
@@ -57,26 +70,5 @@ public class AyashiiApplication
         // アプリケーション終了時にMutexを解放する
         _mutex.ReleaseMutex();
         _mutex.Close();
-    }
-
-    /// <summary>
-    /// 利用可能なローカルIPv4アドレスを取得します。
-    /// </summary>
-    /// <returns>見つかったIPv4アドレスの文字列。見つからない場合は空文字列。</returns>
-    public static string GetLocalIPv4Address()
-    {
-        // 1. 自分のホスト名を取得
-        var hostName = Dns.GetHostName();
-
-        // 2. ホスト名からIPアドレスのリストを取得
-        var host = Dns.GetHostEntry(hostName);
-
-        // 3. IPアドレスのリストから、IPv4のものを探す
-        //    (AddressFamily.InterNetwork が IPv4 を示す)
-        var ipv4Address = host.AddressList.FirstOrDefault(
-            addr => addr.AddressFamily == AddressFamily.InterNetwork
-        );
-
-        return ipv4Address?.ToString() ?? string.Empty;
     }
 }

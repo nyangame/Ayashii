@@ -28,7 +28,7 @@ public static class Ayashii
             FileName = "cmd.exe",
             Arguments = command,
             RedirectStandardOutput = true, // 標準出力をリダイレクトする
-            UseShellExecute = true,     // シェルを介さずにプロセスを起動する
+            UseShellExecute = false,     // シェルを介さずにプロセスを起動する
             CreateNoWindow = true,       // ウィンドウを表示しない
         };
 
@@ -49,8 +49,15 @@ public static class Ayashii
         NetworkFront.Send(evt);
 
         //ユーザにお知らせ
-        processStartInfo.CreateNoWindow = false;
-        processStartInfo.Arguments += " & pause";
-        Process.Start(processStartInfo);
+        // プロセスの起動情報を設定
+        var processStartInfo2 = new ProcessStartInfo
+        {
+            FileName = "cmd.exe",
+            Arguments = command + " & pause",
+            RedirectStandardOutput = false, // 標準出力をリダイレクトする
+            UseShellExecute = true,     // シェルを介さずにプロセスを起動する
+            CreateNoWindow = false,       // ウィンドウを表示しない
+        };
+        Process.Start(processStartInfo2);
     }
 }

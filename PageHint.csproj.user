@@ -7,4 +7,10 @@
     <NXTargetSerialNumber>%24%28NintendoTargetSerialNumber%29</NXTargetSerialNumber>
     <NXTargetName>%24%28NintendoTargetName%29</NXTargetName>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <NintendoTargetSerialNumber />
+    <NintendoTargetName>Default</NintendoTargetName>
+    <NXTargetSerialNumber>%24%28NintendoTargetSerialNumber%29</NXTargetSerialNumber>
+    <NXTargetName>%24%28NintendoTargetName%29</NXTargetName>
+  </PropertyGroup>
 </Project>
